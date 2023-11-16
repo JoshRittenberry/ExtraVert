@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Net.Security;
+
 List<Plant> plants = new List<Plant>()
 {
     new Plant()
@@ -165,6 +167,7 @@ Please Select An Option To Navigate To:
 3. Adopt a plant
 4. Delist a plant
 5. Search all plants by Light Needed
+6. View ExtraVert Plant Statistics
 ");
 
     choice = Console.ReadLine().Trim();
@@ -200,6 +203,10 @@ Please press any key to close the application");
             Console.Clear();
             SearchPlants();
             break;
+        case "6":
+            Console.Clear();
+            SiteStats();
+            break;
         default:
             Console.WriteLine("Invalid Choice");
             break;
@@ -214,7 +221,7 @@ void ListPlants()
     foreach (Plant plant in plants)
     {
         counter++;
-        Console.WriteLine($"{counter}. {plant.Species} in {plant.City} and {(plant.Sold ? "was sold" : "is availble")} for ${plant.AskingPrice}.");
+        Console.WriteLine(PlantDetails(plant, counter));
     }
     Console.WriteLine(@"
 Please press any button to return back to the main menu");
@@ -496,6 +503,7 @@ void AdoptPlant()
     int AdoptedPlantIndex = 0;
     Plant AdoptedPlant = plants[AdoptedPlantIndex];
     int exitOption = 0;
+    int counter = 0;
 
     List<int> plantIDs = new List<int>();
 
@@ -517,8 +525,9 @@ Press Any Key To Continue");
         {
             if (!plant.Sold)
             {
+                counter = plants.IndexOf(plant) + 1;
                 plantIDs.Add(plants.IndexOf(plant) + 1);
-                Console.WriteLine($"PlantID #{plants.IndexOf(plant) + 1} - {plant.Species} is available in {plant.City} for ${plant.AskingPrice}.");
+                Console.WriteLine(PlantDetails(plant, counter));
             }
         }
 
@@ -632,6 +641,7 @@ void RemovePlant()
     int RemovePlantIndex = 0;
     Plant RemovePlant = plants[RemovePlantIndex];
     int exitOption = 0;
+    int counter = 0;
 
     List<int> plantIDs = new List<int>();
 
@@ -651,8 +661,9 @@ Press Any Key To Continue");
         ");
         foreach (Plant plant in plants)
         {
+            counter = plants.IndexOf(plant) + 1;
             plantIDs.Add(plants.IndexOf(plant) + 1);
-            Console.WriteLine($"PlantID #{plants.IndexOf(plant) + 1} - {plant.Species} is available in {plant.City} for ${plant.AskingPrice}.");
+            Console.WriteLine(PlantDetails(plant, counter));
         }
 
         // Step 3 - Ask user to choose a plant
@@ -763,7 +774,7 @@ void SearchPlants()
     string userinput = null;
     int LightValue = 0;
     int exitOption = 0;
-    int count = 0;
+    int counter = 0;
 
     while (exitOption == 0)
     {
@@ -816,12 +827,12 @@ Press Any Key To Be Returned To The Main Menu");
         {
             if (plant.LightNeeds <= LightValue)
             {
-                count++;
-                Console.WriteLine($"{count}. {plant.Species} is available in {plant.City} for ${plant.AskingPrice}.");
+                counter++;
+                Console.WriteLine(PlantDetails(plant, counter));
             }
         }
 
-        count = 0;
+        counter = 0;
 
         // Step 3 - Ask user to choose a plant
         Console.WriteLine(@"
@@ -842,4 +853,79 @@ void RemoveExpiredPosts()
             plants.RemoveAt(i);
         }
     }
+}
+
+void SiteStats()
+{
+    Plant LowestPricePlant = plants[0];
+    int PlantsAvailable = 0;
+    Plant HighestLightNeedPlant = plants[0];
+    int PlantLightNeedsSum = 0;
+    int PlantsAdopted = 0;
+
+    // Lowest price plant name
+    foreach (Plant plant in plants)
+    {
+        if (plant.AskingPrice < LowestPricePlant.AskingPrice)
+        {
+            LowestPricePlant = plant;
+        }
+    }
+    // Number of Plants Available(not sold, and still available)
+    foreach (Plant plant in plants)
+    {
+        if (!plant.Sold)
+        {
+            PlantsAvailable++;
+        }
+    }
+
+    // Name of plant with highest light needs
+    foreach (Plant plant in plants)
+    {
+        if (plant.LightNeeds > HighestLightNeedPlant.LightNeeds)
+        {
+            HighestLightNeedPlant = plant;
+        }
+    }
+
+    // Average light needs
+    foreach (Plant plant in plants)
+    {
+        PlantLightNeedsSum += plant.LightNeeds;
+    }
+
+    decimal AveragePlantLightNeedsValue = (decimal)PlantLightNeedsSum / plants.Count;
+
+    // Percentage of plants adopted
+    foreach (Plant plant in plants)
+    {
+        if (plant.Sold)
+        {
+            PlantsAdopted++;
+        }
+    }
+
+    decimal PercentageOfPlantsAdopted = (decimal)PlantsAdopted / plants.Count * 100;
+
+    Console.WriteLine(@$"ExtraVert Site Statistics:
+    
+The Plant with the lowest price is the {LowestPricePlant.Species} plant with a price of ${LowestPricePlant.AskingPrice}.
+There are currently {PlantsAvailable} plants available.
+The Plant with the highest light needs is the {HighestLightNeedPlant.Species} with a light needed value of {HighestLightNeedPlant.LightNeeds}.
+The average light needed value of a plant is {AveragePlantLightNeedsValue:F2}.
+A total of {PercentageOfPlantsAdopted:F2}% of plants have been adopted.
+");
+
+    Console.ReadKey();
+    Console.Clear();
+    return;
+}
+
+string PlantDetails(Plant plant, int counter)
+{
+    string plantString = $"{counter}. {plant.Species} in {plant.City} and {(plant.Sold ? "was sold" : "is availble")} for ${plant.AskingPrice}.";
+
+    return plantString;
+
 }
