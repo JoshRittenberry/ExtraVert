@@ -5,11 +5,12 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Ficus lyrata",
-        LightNeeds = 3,
+        LightNeeds = 5,
         AskingPrice = 35.99M,
         City = "Austin",
         ZIP = 78701,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 5, 22)
     },
     new Plant()
     {
@@ -18,16 +19,18 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 25.00M,
         City = "New York",
         ZIP = 10001,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 6, 16)
     },
     new Plant()
     {
         Species = "Succulent Assortment",
-        LightNeeds = 3,
+        LightNeeds = 4,
         AskingPrice = 15.50M,
         City = "Los Angeles",
         ZIP = 90001,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateOnly(2023, 6, 4)
     },
     new Plant()
     {
@@ -36,7 +39,8 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 20.75M,
         City = "Miami",
         ZIP = 33101,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 1, 11)
     },
     new Plant()
     {
@@ -45,16 +49,18 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 18.00M,
         City = "Chicago",
         ZIP = 60601,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 6, 29)
     },
     new Plant()
     {
         Species = "Pothos",
-        LightNeeds = 1,
+        LightNeeds = 4,
         AskingPrice = 12.99M,
         City = "Seattle",
         ZIP = 98101,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateOnly(2024, 1, 11)
     },
     new Plant()
     {
@@ -63,7 +69,8 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 22.00M,
         City = "Boston",
         ZIP = 02101,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 12, 5)
     },
     new Plant()
     {
@@ -72,7 +79,8 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 17.50M,
         City = "San Francisco",
         ZIP = 94101,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateOnly(2024, 1, 20)
     },
     new Plant()
     {
@@ -81,16 +89,18 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 10.00M,
         City = "Dallas",
         ZIP = 75201,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateOnly(2023, 11, 26)
     },
     new Plant()
     {
         Species = "Rubber Plant",
-        LightNeeds = 2,
+        LightNeeds = 5,
         AskingPrice = 24.00M,
         City = "Denver",
         ZIP = 80201,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 12, 16)
     },
     new Plant()
     {
@@ -99,7 +109,8 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 30.00M,
         City = "Atlanta",
         ZIP = 30301,
-        Sold = true
+        Sold = true,
+        AvailableUntil = new DateOnly(2024, 1, 25)
     },
     new Plant()
     {
@@ -108,9 +119,12 @@ List<Plant> plants = new List<Plant>()
         AskingPrice = 14.99M,
         City = "Portland",
         ZIP = 97201,
-        Sold = false
+        Sold = false,
+        AvailableUntil = new DateOnly(2023, 12, 17)
     }
 };
+
+RemoveExpiredPosts();
 
 Random random = new Random();
 int randomInteger = random.Next(0, plants.Count);
@@ -131,9 +145,7 @@ The best place in the galaxy to buy all of your plants!";
 
 string choice = null;
 
-Console.WriteLine(greeting);
-Console.WriteLine(@$"
-ExtraVert's Plant-Of-The-Day is the {PlantOfTheDay.Species}! This plant is located in {PlantOfTheDay.City}, and has a light requirement of {PlantOfTheDay.LightNeeds}, for only ${PlantOfTheDay.AskingPrice}!");
+string PlantOfTheDayText = ($"ExtraVert's Plant-Of-The-Day is the {PlantOfTheDay.Species}! This plant is located in {PlantOfTheDay.City}, and has a light requirement of {PlantOfTheDay.LightNeeds}, for only ${PlantOfTheDay.AskingPrice}!");
 while (choice != "0")
 {
     MainMenu();
@@ -141,13 +153,18 @@ while (choice != "0")
 
 void MainMenu()
 {
-    Console.WriteLine(@"
+    Console.WriteLine(@$"
+{greeting}
+
+{PlantOfTheDayText}
+
 Please Select An Option To Navigate To:
 0. Exit
 1. Display all plants
 2. Post a plant to be adopted
 3. Adopt a plant
 4. Delist a plant
+5. Search all plants by Light Needed
 ");
 
     choice = Console.ReadLine().Trim();
@@ -179,6 +196,10 @@ Please press any key to close the application");
             Console.Clear();
             RemovePlant();
             break;
+        case "5":
+            Console.Clear();
+            SearchPlants();
+            break;
         default:
             Console.WriteLine("Invalid Choice");
             break;
@@ -188,7 +209,8 @@ Please press any key to close the application");
 void ListPlants()
 {
     int counter = 0;
-    Console.WriteLine("All Plants:");
+    Console.WriteLine(@"All Plants:
+    ");
     foreach (Plant plant in plants)
     {
         counter++;
@@ -208,6 +230,7 @@ void PostPlant()
     string PlantCity = null;
     int PlantZIP = 0;
     bool PlantSold = false;
+    DateOnly AvailableUntil = DateOnly.FromDateTime(DateTime.Now.AddDays(90));
 
     string exitReminder = "At any time you may type 'exit' to return back to the main menu to stop posting a plant for sale.";
     string userinput = null;
@@ -488,7 +511,8 @@ Press Any Key To Continue");
         Console.Clear();
 
         // Step 2 - Display Plants
-        Console.WriteLine("Adoptable Plants:");
+        Console.WriteLine(@"Adoptable Plants:
+        ");
         foreach (Plant plant in plants)
         {
             if (!plant.Sold)
@@ -603,7 +627,7 @@ Press Any Key To Be Returned To The Main Menu");
 
 void RemovePlant()
 {
-    string exitReminder = "At any time you may type 'exit' to return back to the main menu to stop adopting a plant.";
+    string exitReminder = "At any time you may type 'exit' to return back to the main menu to stop removing a plant.";
     string userinput = null;
     int RemovePlantIndex = 0;
     Plant RemovePlant = plants[RemovePlantIndex];
@@ -614,7 +638,7 @@ void RemovePlant()
     while (exitOption == 0)
     {
         // Step 1 - Welcome
-        Console.WriteLine(@$"Thank you for choosing to adopt a plant!
+        Console.WriteLine(@$"You have choosen to remove a plant!
 {exitReminder}
 
 Press Any Key To Continue");
@@ -623,7 +647,8 @@ Press Any Key To Continue");
         Console.Clear();
 
         // Step 2 - Display Plants
-        Console.WriteLine("Adoptable Plants:");
+        Console.WriteLine(@"Removable Plants:
+        ");
         foreach (Plant plant in plants)
         {
             plantIDs.Add(plants.IndexOf(plant) + 1);
@@ -728,6 +753,93 @@ Press Any Key To Be Returned To The Main Menu");
             default:
                 Console.WriteLine(@"This is not a valid choice...");
                 break;
+        }
+    }
+}
+
+void SearchPlants()
+{
+    string exitReminder = "At any time you may type 'exit' to return back to the main menu to stop adopting a plant.";
+    string userinput = null;
+    int LightValue = 0;
+    int exitOption = 0;
+    int count = 0;
+
+    while (exitOption == 0)
+    {
+        // Step 1 - Welcome
+        Console.WriteLine(@$"You may search all of the available plants based on the light needed. 
+Please type in a value (1-5) to be show all the plants with that value or less!
+
+{exitReminder}
+");
+
+        while (true)
+        {
+            userinput = Console.ReadLine().Trim();
+            if (userinput.ToLower() == "exit")
+            {
+                exitOption = 3;
+                Console.Clear();
+                Console.WriteLine(@"You've selected to cancel...
+
+Press Any Key To Be Returned To The Main Menu");
+                Console.ReadKey();
+                Console.Clear();
+                return;
+            }
+            else if (userinput == "")
+            {
+                Console.WriteLine("Please provide a valid response...");
+            }
+            else if (!int.TryParse(userinput, out _))
+            {
+                Console.WriteLine("Please only provide a number between 1 and 5...");
+            }
+            else if (int.Parse(userinput) > 0 && int.Parse(userinput) <= 5)
+            {
+                LightValue = int.Parse(userinput);
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Please provide a valid response...");
+            }
+        }
+
+        Console.Clear();
+
+        // Step 2 - Display Plants
+        Console.WriteLine(@$"Plants with a Light Needed value of {LightValue} or less:
+        ");
+        foreach (Plant plant in plants)
+        {
+            if (plant.LightNeeds <= LightValue)
+            {
+                count++;
+                Console.WriteLine($"{count}. {plant.Species} is available in {plant.City} for ${plant.AskingPrice}.");
+            }
+        }
+
+        count = 0;
+
+        // Step 3 - Ask user to choose a plant
+        Console.WriteLine(@"
+Press Any Key To Be Returned To The Main Menu.");
+        
+        Console.ReadKey();
+        Console.Clear();
+        return;
+    }
+}
+
+void RemoveExpiredPosts()
+{
+    for (int i = plants.Count - 1; i >= 0; i--)
+    {
+        if (plants[i].AvailableUntil < DateOnly.FromDateTime(DateTime.Now))
+        {
+            plants.RemoveAt(i);
         }
     }
 }
