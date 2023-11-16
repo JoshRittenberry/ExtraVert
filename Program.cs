@@ -1,60 +1,130 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Configuration.Assemblies;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 
 List<Plant> plants = new List<Plant>()
 {
-new Plant()
-{
-Species = "Ficus lyrata",
-LightNeeds = 3,
-AskingPrice = 35.99M,
-City = "Austin",
-ZIP = 78701,
-Sold = false
-},
-new Plant()
-{
-Species = "Monstera deliciosa",
-LightNeeds = 2,
-AskingPrice = 25.00M,
-City = "New York",
-ZIP = 10001,
-Sold = false
-},
-new Plant()
-{
-Species = "Succulent Assortment",
-LightNeeds = 3,
-AskingPrice = 15.50M,
-City = "Los Angeles",
-ZIP = 90001,
-Sold = true
-},
-new Plant()
-{
-Species = "Orchid Phalaenopsis",
-LightNeeds = 2,
-AskingPrice = 20.75M,
-City = "Miami",
-ZIP = 33101,
-Sold = false
-},
-new Plant()
-{
-Species = "Snake Plant",
-LightNeeds = 1,
-AskingPrice = 18.00M,
-City = "Chicago",
-ZIP = 60601,
-Sold = false
-}
+    new Plant()
+    {
+        Species = "Ficus lyrata",
+        LightNeeds = 3,
+        AskingPrice = 35.99M,
+        City = "Austin",
+        ZIP = 78701,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Monstera deliciosa",
+        LightNeeds = 2,
+        AskingPrice = 25.00M,
+        City = "New York",
+        ZIP = 10001,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Succulent Assortment",
+        LightNeeds = 3,
+        AskingPrice = 15.50M,
+        City = "Los Angeles",
+        ZIP = 90001,
+        Sold = true
+    },
+    new Plant()
+    {
+        Species = "Orchid Phalaenopsis",
+        LightNeeds = 2,
+        AskingPrice = 20.75M,
+        City = "Miami",
+        ZIP = 33101,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Snake Plant",
+        LightNeeds = 1,
+        AskingPrice = 18.00M,
+        City = "Chicago",
+        ZIP = 60601,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Pothos",
+        LightNeeds = 1,
+        AskingPrice = 12.99M,
+        City = "Seattle",
+        ZIP = 98101,
+        Sold = true
+    },
+    new Plant()
+    {
+        Species = "ZZ Plant",
+        LightNeeds = 1,
+        AskingPrice = 22.00M,
+        City = "Boston",
+        ZIP = 02101,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Peace Lily",
+        LightNeeds = 2,
+        AskingPrice = 17.50M,
+        City = "San Francisco",
+        ZIP = 94101,
+        Sold = true
+    },
+    new Plant()
+    {
+        Species = "Aloe Vera",
+        LightNeeds = 3,
+        AskingPrice = 10.00M,
+        City = "Dallas",
+        ZIP = 75201,
+        Sold = true
+    },
+    new Plant()
+    {
+        Species = "Rubber Plant",
+        LightNeeds = 2,
+        AskingPrice = 24.00M,
+        City = "Denver",
+        ZIP = 80201,
+        Sold = false
+    },
+    new Plant()
+    {
+        Species = "Calathea",
+        LightNeeds = 2,
+        AskingPrice = 30.00M,
+        City = "Atlanta",
+        ZIP = 30301,
+        Sold = true
+    },
+    new Plant()
+    {
+        Species = "Spider Plant",
+        LightNeeds = 1,
+        AskingPrice = 14.99M,
+        City = "Portland",
+        ZIP = 97201,
+        Sold = false
+    }
 };
 
+Random random = new Random();
+int randomInteger = random.Next(0, plants.Count);
+
+Plant PlantOfTheDay = plants[randomInteger];
+
+while (PlantOfTheDay.Sold)
+{
+    randomInteger = random.Next(0, plants.Count);
+    PlantOfTheDay = plants[randomInteger];
+}
+
 Console.Clear();
+
 
 string greeting = @"Welcome to ExtraVert
 The best place in the galaxy to buy all of your plants!";
@@ -62,6 +132,8 @@ The best place in the galaxy to buy all of your plants!";
 string choice = null;
 
 Console.WriteLine(greeting);
+Console.WriteLine(@$"
+ExtraVert's Plant-Of-The-Day is the {PlantOfTheDay.Species}! This plant is located in {PlantOfTheDay.City}, and has a light requirement of {PlantOfTheDay.LightNeeds}, for only ${PlantOfTheDay.AskingPrice}!");
 while (choice != "0")
 {
     MainMenu();
