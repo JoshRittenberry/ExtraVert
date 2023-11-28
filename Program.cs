@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Net.Security;
+using Microsoft.VisualBasic;
 
 List<Plant> plants = new List<Plant>()
 {
@@ -126,6 +127,8 @@ List<Plant> plants = new List<Plant>()
     }
 };
 
+Dictionary<string, int> plantSpecies = new Dictionary<string, int> { };
+
 RemoveExpiredPosts();
 
 Random random = new Random();
@@ -168,6 +171,7 @@ Please Select An Option To Navigate To:
 4. Delist a plant
 5. Search all plants by Light Needed
 6. View ExtraVert Plant Statistics
+7. View Plant Species
 ");
 
     choice = Console.ReadLine().Trim();
@@ -206,6 +210,10 @@ Please press any key to close the application");
         case "6":
             Console.Clear();
             SiteStats();
+            break;
+        case "7":
+            Console.Clear();
+            InventoryBySpecies();
             break;
         default:
             Console.WriteLine("Invalid Choice");
@@ -575,7 +583,7 @@ Press Any Key To Be Returned To The Main Menu");
         }
 
         Console.Clear();
-        
+
         // Step 5 - Verify plant adoption
         Console.WriteLine(@$"You have chosen to adopt the following plant:
         
@@ -590,7 +598,7 @@ Please Select An Option to Continue:
 2. Adopt A Different Plant
 3. Cancel Adoption");
 
-        exitOption = int.Parse(Console.ReadLine().Trim()); 
+        exitOption = int.Parse(Console.ReadLine().Trim());
         switch (exitOption)
         {
             // Adopt Plant
@@ -837,7 +845,7 @@ Press Any Key To Be Returned To The Main Menu");
         // Step 3 - Ask user to choose a plant
         Console.WriteLine(@"
 Press Any Key To Be Returned To The Main Menu.");
-        
+
         Console.ReadKey();
         Console.Clear();
         return;
@@ -917,6 +925,30 @@ The average light needed value of a plant is {AveragePlantLightNeedsValue:F2}.
 A total of {PercentageOfPlantsAdopted:F2}% of plants have been adopted.
 ");
 
+    Console.ReadKey();
+    Console.Clear();
+    return;
+}
+
+void InventoryBySpecies()
+{
+    int speciesNumber = 0;
+    // iterates through the plants list
+    foreach (Plant plant in plants)
+    {
+        if (!plantSpecies.TryGetValue(plant.Species, out _))
+        {
+            speciesNumber++;
+            plantSpecies.Add(plant.Species, speciesNumber);
+        }
+    }
+    // iterates through the dictonary of plantSpeices
+    Console.WriteLine(@$"The Species currently in our inventory are:
+    ");
+    foreach (KeyValuePair<string, int> kv in plantSpecies)
+    {
+        Console.WriteLine($"{kv.Value}. {kv.Key}");
+    }
     Console.ReadKey();
     Console.Clear();
     return;
