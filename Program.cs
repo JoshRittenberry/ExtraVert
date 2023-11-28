@@ -8,6 +8,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Ficus lyrata",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 5,
         AskingPrice = 35.99M,
         City = "Austin",
@@ -18,6 +19,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Monstera deliciosa",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 2,
         AskingPrice = 25.00M,
         City = "New York",
@@ -28,6 +30,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Succulent Assortment",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 4,
         AskingPrice = 15.50M,
         City = "Los Angeles",
@@ -38,6 +41,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Orchid Phalaenopsis",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 2,
         AskingPrice = 20.75M,
         City = "Miami",
@@ -48,6 +52,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Snake Plant",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 1,
         AskingPrice = 18.00M,
         City = "Chicago",
@@ -58,6 +63,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Pothos",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 4,
         AskingPrice = 12.99M,
         City = "Seattle",
@@ -68,6 +74,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "ZZ Plant",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 1,
         AskingPrice = 22.00M,
         City = "Boston",
@@ -78,6 +85,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Peace Lily",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 2,
         AskingPrice = 17.50M,
         City = "San Francisco",
@@ -88,6 +96,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Aloe Vera",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 3,
         AskingPrice = 10.00M,
         City = "Dallas",
@@ -98,6 +107,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Rubber Plant",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 5,
         AskingPrice = 24.00M,
         City = "Denver",
@@ -108,6 +118,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Calathea",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 2,
         AskingPrice = 30.00M,
         City = "Atlanta",
@@ -118,6 +129,7 @@ List<Plant> plants = new List<Plant>()
     new Plant()
     {
         Species = "Spider Plant",
+        PlantType = "Yeah, I'm not adding this lol",
         LightNeeds = 1,
         AskingPrice = 14.99M,
         City = "Portland",
@@ -240,6 +252,7 @@ Please press any button to return back to the main menu");
 void PostPlant()
 {
     string PlantSpecies = null;
+    string PlantType = null;
     int PlantLightNeeds = 0;
     decimal PlantPrice = 0.00M;
     string PlantCity = null;
@@ -250,6 +263,15 @@ void PostPlant()
     string exitReminder = "At any time you may type 'exit' to return back to the main menu to stop posting a plant for sale.";
     string userinput = null;
     int exitOption = 0;
+
+    // PlantType Array - added from an explorer chapater in Book 1
+    string[] plantTypes =
+    {
+        "tree",
+        "bush",
+        "flower",
+        "herb"
+    };
 
     while (exitOption == 0)
     {
@@ -289,6 +311,49 @@ Press Any Key To Be Returned To The Main Menu");
             else
             {
                 PlantSpecies = userinput;
+                break;
+            }
+        }
+
+        Console.Clear();
+
+        // Step 2.5 - PlantType (this is added from an explorer chapter in Book 1)
+        Console.WriteLine(@$"Please provide the generic Plant Type that corrosponds to your plant:
+        ");
+        foreach (String plantType in plantTypes)
+        {
+            Console.WriteLine(@$"{Array.IndexOf(plantTypes, plantType) + 1}. {plantType}");
+        }
+        while (true)
+        {
+            userinput = Console.ReadLine().Trim();
+            if (userinput == "exit")
+            {
+                exitOption = 3;
+                Console.Clear();
+                Console.WriteLine(@"You've selected to cancel...
+
+Press Any Key To Be Returned To The Main Menu");
+                Console.ReadKey();
+                Console.Clear();
+                return;
+            }
+            else if (userinput == "")
+            {
+                Console.WriteLine("Please provide a valid response...");
+            }
+            else if (!int.TryParse(userinput, out _))
+            {
+                Console.WriteLine("The Plant Type should be a number listed above...");
+            }
+            else if (int.Parse(userinput) > plantTypes.Length || int.Parse(userinput) <= 0)
+            {
+                Console.WriteLine("The Plant Type should be a number listed above...");
+            }
+            else
+            {
+                PlantType = plantTypes[int.Parse(userinput) - 1];
+                Console.WriteLine($"{PlantType}");
                 break;
             }
         }
